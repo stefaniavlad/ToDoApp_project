@@ -1,2 +1,2 @@
-/venv_django
-**/pycache
+django_project/
+**/__pycache__
