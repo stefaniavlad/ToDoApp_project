@@ -13,14 +13,22 @@
         </tr>
       </thead>
       <tbody>
-    {% if tasks %}
-        {% for task in tasks %}
-        <tr>
-          <td>{{ task.id }}</td>
-          <td>{{ task.task }}</td>
-          <td>{{ task.task_done }}</td>
-        </tr>
-        {% endfor %}
+        {% if tasks %}
+          {% for task in tasks %}
+            {% if task.task_done %}
+                <tr class="table-warning">
+                    <td class="linethrough">{{ task.task }}</td>
+                    <td><a href="{% url 'change_status' task.id %}">Not Done</a></td>
+                    <td><a href="{% url 'delete' task.id %}">Delete</a></td>
+                </tr>
+            {% else %}
+                <tr class="table-danger">
+                    <td>{{ task.task }}</td>
+                    <td><a href="{% url 'change_status' task.id %}">Done</a></td>
+                    <td><a href="{% url 'delete' task.id %}">Delete</a></td>
+                </tr>
+            {% endif %}
+          {% endfor %}
     {% endif %}
       </tbody>
       </table>
@@ -30,11 +38,9 @@
       <br>
 
 <!-- FORM TO SEND DATA TO DB -->
-<form>
-  <h4>Adauga un task nou!</h4>
-  <div class="mb-3">
-  <input type="text" class="form-control" placeholder="Ce task pui in agenda?">
-  </div>
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
   <button type="submit" class="btn btn-primary">Adauga in tabel</button>
 </form>
 <!-- END FORM -->
