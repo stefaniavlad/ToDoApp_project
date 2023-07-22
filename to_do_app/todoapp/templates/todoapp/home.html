@@ -1,48 +1,59 @@
 {% extends 'todoapp/base.html' %}
 
+
 {% block content %}
   <h2> Task-uri batute in cuie! </h2>
 
-      <!-- Table data -->
-      <table style="width:100%">
-    <thead>
-        <tr>
-          <th>Nr. task</th>
-          <th>Task</th>
-          <th>Stare</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% if tasks %}
-          {% for task in tasks %}
-            {% if task.task_done %}
-                <tr class="table-warning">
-                    <td class="linethrough">{{ task.task }}</td>
-                    <td><a href="{% url 'change_status' task.id %}">Not Done</a></td>
-                    <td><a href="{% url 'delete' task.id %}">Delete</a></td>
-                </tr>
-            {% else %}
-                <tr class="table-danger">
-                    <td>{{ task.task }}</td>
-                    <td><a href="{% url 'change_status' task.id %}">Done</a></td>
-                    <td><a href="{% url 'delete' task.id %}">Delete</a></td>
-                </tr>
-            {% endif %}
-          {% endfor %}
+    <!-- Only if user is authenticated -->
+    {% if user.is_authenticated %}
+    <p>welcome {{ user.username }}</p>
+    <p><a href="/logout">Logout</a></p>
+
+        <!-- Table data -->
+        <table style="width:100%">
+          <thead>
+          <tr>
+            <th>Task</th>
+            <th>Status</th>
+            <th>Delete task</th>
+          </tr>
+        </thead>
+        <tbody>
+             {% if tasks %}
+                  {% for task in tasks %}
+                      {% if task.task_done %}
+                          <tr class="table-warning">
+                              <td class="linethrough">{{ task.task }}</td>
+                              <td><a href="{% url 'change_status' task.id %}">Done</a></td>
+                              <td><a href="{% url 'delete' task.id %}">Delete</a></td>
+                          </tr>
+                      {% else %}
+                          <tr class="table-success">
+                              <td>{{ task.task }}</td>
+                              <td><a href="{% url 'change_status' task.id %}">Not Done</a></td>
+                              <td><a href="{% url 'delete' task.id %}">Delete</a></td>
+                          </tr>
+                      {% endif %}
+                  {% endfor %}
+              {% endif %}
+        </tbody>
+        </table>
+        <!-- END TABLE -->
+
+        <br>
+        <br>
+
+      <!-- FORM TO SEND DATA TO DB -->
+      <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Adauga in tabel</button>
+      </form>
+      <!-- END FORM -->
+
+    {% else %}
+        <p><a href="/login">Login</a></p>
+        <p><a href="/register">Signup</a></p>
     {% endif %}
-      </tbody>
-      </table>
-      <!-- END TABLE -->
-
-      <br>
-      <br>
-
-<!-- FORM TO SEND DATA TO DB -->
-<form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="btn btn-primary">Adauga in tabel</button>
-</form>
-<!-- END FORM -->
 
 {% endblock %}

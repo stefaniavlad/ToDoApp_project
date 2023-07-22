@@ -23,3 +23,9 @@ table td {
 .linethrough {
     text-decoration: line-through;
 }
+
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
